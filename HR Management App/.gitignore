@@ -22,3 +22,34 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# System files
+.DS_Store
+Thumbs.db
+npm-debug.log*
+
+# Windows OS directories
+AppData/
+Application Data/
+Cookies/
+Desktop/
+Documents/
+Downloads/
+Favorites/
+IntelGraphicsProfiles/
+Links/
+Local Settings/
+My Documents/
+NetHood/
+PrintHood/
+Recent/
+SendTo/
+Start Menu/
+Templates/
+Videos/
+Saved Games/
+Searches/
+Music/
+OneDrive/
+NTUSER.DAT*
+
+
