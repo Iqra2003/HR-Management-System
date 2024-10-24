@@ -1,5 +1,5 @@
 import express from 'express';
-import { poolPromise } from '../utils/db.js'; 
+// import { poolPromise } from '../utils/db.js';s 
 import jwt from 'jsonwebtoken';
 
 const router = express.Router();
