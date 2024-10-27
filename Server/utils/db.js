@@ -1,4 +1,4 @@
-import mysql from 'mysql2'; // Change this line
+import mysql from 'mysql2'; 
 
 const con = mysql.createConnection({
     host: "localhost",
@@ -8,7 +8,6 @@ const con = mysql.createConnection({
     port: 3306
 });
 
-// Keep the connection open for handling requests
 
 con.connect(function(err) {
     if (err) {

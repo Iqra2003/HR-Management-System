@@ -1,25 +1,38 @@
 import React, { useState } from 'react';
 import './style.css';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+useNavigate
 
 const Login = () => {
     const [values, setValues] = useState({
         email: '',
         password: ''
     });
+    const [error,setError]=useState(null)
+    const navigate =useNavigate()
+    axios.defaults.withCredentials=true;
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        axios.post('http://localhost:3000/auth/adminlogin', values)
-            .then(result => console.log(result))
-            .catch(err => {
-                console.error("Error details:", err.response ? err.response.data : err.message);
-            });
+        axios.post('http://localhost:3000/auth/adminlogin', values, { withCredentials: true })
+    .then(result => {
+        if (result.data.loginStatus) {
+            navigate('/Dashboard');
+        } else {
+            setError(result.data.Error);
+        }
+    })
+    .catch(err => console.error(err));
+ 
     };
 
     return (
         <div className='d-flex justify-content-center align-items-center vh-100 loginPage'>
             <div className='p-3 rounded w-25 border loginForm'>
+                <div className='text-warning'>
+                    {error && error}
+                </div>
                 <h2>Login Page</h2>
                 <form onSubmit={handleSubmit}>
                     <div>
@@ -37,7 +50,7 @@ const Login = () => {
                         <label htmlFor='password'><strong>Password:</strong></label>
                         <input 
                             type='password' 
-                            name='password'  // Make sure to set the correct name for the password
+                            name='password' 
                             placeholder='Enter password' 
                             onChange={(e) => setValues({ ...values, password: e.target.value })} 
                             className='form-control rounded-0'
