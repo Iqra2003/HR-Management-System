@@ -50,7 +50,7 @@ const Employee = () => {
           </thead>
           <tbody>
             {employee.map((e) => (
-              <tr>
+              <tr key={e.id}>
                 <td>{e.name}</td>
                 <td>
                   <img

@@ -8,7 +8,9 @@ import Employee from "./components/Employee";
 import Department from "./components/Department";
 import Profile from "./components/Profile";
 import AddDepartment from "./components/AddDepartment";
-i
+import AddEmployee from "./components/AddEmployee";
+import EditEmployee from "./components/EditEmployee";
+
 function App() {
 
   return (

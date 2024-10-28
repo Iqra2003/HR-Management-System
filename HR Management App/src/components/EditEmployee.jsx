@@ -119,7 +119,7 @@ const EditEmployee = () => {
           </div>
           <div className="col-12">
             <label for="category" className="form-label">
-              Department
+              Category
             </label>
             <select name="category" id="category" className="form-select"
                 onChange={(e) => setEmployee({...employee, category_id: e.target.value})}>

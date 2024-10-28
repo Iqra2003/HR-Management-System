@@ -5,7 +5,7 @@ import { adminRouter } from "./Routes/AdminRoute.js";
 const app = express();
 
 app.use(cors({
-    origin: "http://localhost:5174", // Update this to match your frontend's URL
+    origin: "http://localhost:5173", // Update this to match your frontend's URL
     methods: ['GET', 'POST', 'PUT'],
     credentials: true // Allow credentials if you need them (like cookies)
 }));

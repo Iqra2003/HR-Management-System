@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './style.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-useNavigate
+
 
 const Login = () => {
     const [values, setValues] = useState({
@@ -15,7 +15,7 @@ const Login = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        axios.post('http://localhost:3000/auth/adminlogin', values, { withCredentials: true })
+        axios.post('http://localhost:3000/auth/adminlogin', values)
     .then(result => {
         if (result.data.loginStatus) {
             navigate('/Dashboard');
