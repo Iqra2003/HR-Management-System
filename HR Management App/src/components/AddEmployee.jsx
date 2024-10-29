@@ -29,7 +29,9 @@ const AddEmployee = () => {
   }, []);
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
+      console.log("Submitting employee data:", employee); // Log employee data
+
     const formData = new FormData();
     formData.append('name', employee.name);
     formData.append('email', employee.email);
@@ -133,7 +135,7 @@ const AddEmployee = () => {
             <select name="department" id="department" className="form-select"
                 onChange={(e) => setEmployee({...employee, department_id: e.target.value})}>
               {department.map((c) => {
-                return <option value={c.id}>{c.name}</option>;
+                return <option value={c.ID}>{c.Department_name}</option>;//Same name as the db coumn name
               })}
             </select>
           </div>

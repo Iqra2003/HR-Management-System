@@ -96,7 +96,7 @@ const Home = () => {
           <tbody>
             {
               admins.map(a => (
-                <tr>
+                <tr key={a.id}>
                   <td>{a.email}</td>
                   <td>
                   <button

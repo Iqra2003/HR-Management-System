@@ -10,6 +10,7 @@ const Department = () => {
       .get("http://localhost:3000/auth/department")
       .then((result) => {
         if (result.data.Status) {
+          console.log("Fetched departments:", result.data.Result); // Log data
           setDepartment(result.data.Result);
         } else {
           alert(result.data.Error);
@@ -34,8 +35,8 @@ const Department = () => {
           </thead>
           <tbody>
             {department.map((c) => (
-              <tr key={c.id}>
-                <td>{c.name}</td>
+              <tr key={c.ID}>
+                <td>{c.Department_name}</td>
               </tr>
             ))}
           </tbody>
