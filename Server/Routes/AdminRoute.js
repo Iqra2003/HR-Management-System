@@ -75,13 +75,18 @@ router.post('/add_employee',upload.single('image'), (req, res) => {
             hash,
             req.body.address,
             req.body.salary, 
-            req.file.filename,
+            req.file ? req.file.filename : null, // Check if file is uploaded
             req.body.department_id
         ]
-        con.query(sql, [values], (err, result) => {
-            if(err) return res.json({Status: false, Error: err})
-            return res.json({Status: true})
-        })
+        con.query(sql, values, (err, result) => {
+            if (err) {
+                console.error("SQL Error: ", err); // Log the SQL error
+                return res.json({ Status: false, Error: err.message });
+            }
+            console.log("Insert Result: ", result); // Log the result of the insert
+            return res.json({ Status: true });
+        });
+        
     })
 })
 

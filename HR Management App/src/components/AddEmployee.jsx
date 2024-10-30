@@ -7,13 +7,13 @@ const AddEmployee = () => {
     name: "",
     email: "",
     password: "",
-    salary: "",
     address: "",
+    salary: "",
     department_id: "",
-    image: "",
+    image: null, // Use null initially for the image
   });
   const [department, setDepartment] = useState([]);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -30,27 +30,36 @@ const AddEmployee = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-      console.log("Submitting employee data:", employee); // Log employee data
+    console.log("Submitting employee data:", employee);
 
     const formData = new FormData();
-    formData.append('name', employee.name);
-    formData.append('email', employee.email);
-    formData.append('password', employee.password);
-    formData.append('address', employee.address);
-    formData.append('salary', employee.salary);
-    formData.append('image', employee.image);
-    formData.append('department_id', employee.department_id);
+    formData.append("name", employee.name);
+    formData.append("email", employee.email);
+    formData.append("password", employee.password);
+    formData.append("address", employee.address);
+    formData.append("salary", employee.salary);
+    formData.append("image", employee.image); // File added here
+    formData.append("department_id", employee.department_id);
 
-    axios.post('http://localhost:3000/auth/add_employee', formData)
-    .then(result => {
-        if(result.data.Status) {
-            navigate('/dashboard/employee')
+    axios
+      .post("http://localhost:3000/auth/add_employee", formData)
+      .then((result) => {
+        if (result.data.Status) {
+          navigate("/dashboard/employee");
         } else {
-            alert(result.data.Error)
+          alert(result.data.Error);
         }
-    })
-    .catch(err => console.log(err))
-  }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    setEmployee({
+      ...employee,
+      [name]: name === "image" ? files[0] : value,
+    });
+  };
 
   return (
     <div className="d-flex justify-content-center align-items-center mt-3">
@@ -66,9 +75,8 @@ const AddEmployee = () => {
               className="form-control rounded-0"
               id="inputName"
               placeholder="Enter Name"
-              onChange={(e) =>
-                setEmployee({ ...employee, name: e.target.value })
-              }
+              name="name"
+              onChange={handleChange}
             />
           </div>
           <div className="col-12">
@@ -81,9 +89,8 @@ const AddEmployee = () => {
               id="inputEmail4"
               placeholder="Enter Email"
               autoComplete="off"
-              onChange={(e) =>
-                setEmployee({ ...employee, email: e.target.value })
-              }
+              name="email"
+              onChange={handleChange}
             />
           </div>
           <div className="col-12">
@@ -95,25 +102,10 @@ const AddEmployee = () => {
               className="form-control rounded-0"
               id="inputPassword4"
               placeholder="Enter Password"
-              onChange={(e) =>
-                setEmployee({ ...employee, password: e.target.value })
-              }
+              name="password"
+              onChange={handleChange}
             />
-            <label htmlFor="inputSalary" className="form-label">
-              Salary
-            </label>
-            <input
-              type="text"
-              className="form-control rounded-0"
-              id="inputSalary"
-              placeholder="Enter Salary"
-              autoComplete="off"
-              onChange={(e) =>
-                setEmployee({ ...employee, salary: e.target.value })
-              }
-            />
-          </div>
-          <div className="col-12">
+             <div className="col-12">
             <label htmlFor="inputAddress" className="form-label">
               Address
             </label>
@@ -123,20 +115,41 @@ const AddEmployee = () => {
               id="inputAddress"
               placeholder="1234 Main St"
               autoComplete="off"
-              onChange={(e) =>
-                setEmployee({ ...employee, address: e.target.value })
-              }
+              name="address"
+              onChange={handleChange}
+            />
+          </div>
+          </div>
+          <div className="col-12">
+            <label htmlFor="inputSalary" className="form-label">
+              Salary
+            </label>
+            <input
+              type="text"
+              className="form-control rounded-0"
+              id="inputSalary"
+              placeholder="Enter Salary"
+              autoComplete="off"
+              name="salary"
+              onChange={handleChange}
             />
           </div>
           <div className="col-12">
             <label htmlFor="department" className="form-label">
-             Department
+              Department
             </label>
-            <select name="department" id="department" className="form-select"
-                onChange={(e) => setEmployee({...employee, department_id: e.target.value})}>
-              {department.map((c) => {
-                return <option value={c.ID}>{c.Department_name}</option>;//Same name as the db coumn name
-              })}
+            <select
+              name="department_id"
+              id="department"
+              className="form-select"
+              onChange={handleChange}
+            >
+              <option value="">Select Department</option>
+              {department.map((c) => (
+                <option key={c.ID} value={c.ID}>
+                  {c.Department_name}
+                </option>
+              ))}
             </select>
           </div>
           <div className="col-12 mb-3">
@@ -148,7 +161,7 @@ const AddEmployee = () => {
               className="form-control rounded-0"
               id="inputGroupFile01"
               name="image"
-              onChange={(e) => setEmployee({...employee, image: e.target.files[0]})}
+              onChange={handleChange}
             />
           </div>
           <div className="col-12">
