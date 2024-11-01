@@ -63,32 +63,38 @@ const upload = multer({
 })
 // end imag eupload 
 
-router.post('/add_employee',upload.single('image'), (req, res) => {
-    const sql = `INSERT INTO employee 
-    (name,email,password, address, salary,image, department_id) 
-    VALUES (?)`;
+router.post('/add_employee', upload.single('image'), (req, res) => {
+    const sql = `INSERT INTO employee (name, email, password, address, salary, image, department_id) VALUES (?)`;
+
     bcrypt.hash(req.body.password, 10, (err, hash) => {
-        if(err) return res.json({Status: false, Error: "Query Error"})
+        if (err) {
+            console.error("Bcrypt Error:", err); // Detailed error log for hashing issues
+            return res.json({ Status: false, Error: JSON.stringify(err) });
+        }
+
         const values = [
             req.body.name,
             req.body.email,
             hash,
             req.body.address,
             req.body.salary, 
-            req.file ? req.file.filename : null, // Check if file is uploaded
+            req.file ? req.file.filename : null, // Check for file presence
             req.body.department_id
-        ]
-        con.query(sql, values, (err, result) => {
+        ];
+
+        console.log("Values being inserted:", values); // Log values for verification
+
+        con.query(sql, [values], (err, result) => {
             if (err) {
-                console.error("SQL Error: ", err); // Log the SQL error
-                return res.json({ Status: false, Error: err.message });
+                console.error("SQL Query Error:", JSON.stringify(err)); // Log SQL error in detail
+                return res.json({ Status: false, Error: JSON.stringify(err) }); // Send detailed error to client
             }
-            console.log("Insert Result: ", result); // Log the result of the insert
-            return res.json({ Status: true });
+            console.log("Insert Result:", result); // Log success result
+            return res.json({ Status: true, Result: result });
         });
-        
-    })
-})
+    });
+});
+
 
 router.get('/employee', (req, res) => {
     const sql = "SELECT * FROM employee";
@@ -110,14 +116,14 @@ router.get('/employee/:id', (req, res) => {
 router.put('/edit_employee/:id', (req, res) => {
     const id = req.params.id;
     const sql = `UPDATE employee 
-        set name = ?, email = ?, salary = ?, address = ?, category_id = ? 
+        set name = ?, email = ?, salary = ?, address = ?, department_id = ? 
         Where id = ?`
     const values = [
         req.body.name,
         req.body.email,
         req.body.salary,
         req.body.address,
-        req.body.category_id
+        req.body.department_id
     ]
     con.query(sql,[...values, id], (err, result) => {
         if(err) return res.json({Status: false, Error: "Query Error"+err})

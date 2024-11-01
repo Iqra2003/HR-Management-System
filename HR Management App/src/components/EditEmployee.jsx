@@ -1,61 +1,77 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 const EditEmployee = () => {
-    const {id} = useParams()
-    const [employee, setEmployee] = useState({
-        name: "",
-        email: "",
-        salary: "",
-        address: "",
-        category_id: "",
-      });
-      const [category, setCategory] = useState([])
-      const navigate = useNavigate()
+  const { id } = useParams();
+  const [employee, setEmployee] = useState({
+    name: "",
+    email: "",
+    salary: "",
+    address: "",
+    department_id: "",
+  });
+  const [department, setDepartment] = useState([]);
+  const navigate = useNavigate();
 
-      useEffect(()=> {
-        axios.get('http://localhost:3000/auth/category')
-        .then(result => {
-            if(result.data.Status) {
-                setCategory(result.data.Result);
-            } else {
-                alert(result.data.Error)
-            }
-        }).catch(err => console.log(err))
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/auth/department")
+      .then((result) => {
+        if (result.data.Status) {
+          setDepartment(result.data.Result);
+        } else {
+          alert(result.data.Error);
+        }
+      })
+      .catch((err) =>
+        console.log(
+          "Error updating employee:",
+          err.response ? err.response.data : err
+        )
+      );
 
-        axios.get('http://localhost:3000/auth/employee/'+id)
-        .then(result => {
-            setEmployee({
-                ...employee,
-                name: result.data.Result[0].name,
-                email: result.data.Result[0].email,
-                address: result.data.Result[0].address,
-                salary: result.data.Result[0].salary,
-                category_id: result.data.Result[0].category_id,
-            })
-        }).catch(err => console.log(err))
-    }, [])
+    axios
+      .get("http://localhost:3000/auth/employee/" + id)
+      .then((result) => {
+        setEmployee({
+          ...employee,
+          name: result.data.Result[0].name,
+          email: result.data.Result[0].email,
+          address: result.data.Result[0].address,
+          salary: result.data.Result[0].salary,
+          department_id: result.data.Result[0].department_id,
+        });
+      })
+      .catch((err) =>
+        console.log(
+          "Error updating employee:",
+          err.response ? err.response.data : err
+        )
+      );
+  }, []);
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        axios.put('http://localhost:3000/auth/edit_employee/'+id, employee)
-        .then(result => {
-            if(result.data.Status) {
-                navigate('/dashboard/employee')
-            } else {
-                alert(result.data.Error)
-            }
-        }).catch(err => console.log(err))
-    }
-    
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .put("http://localhost:3000/auth/edit_employee/" + id, employee)
+      .then((result) => {
+        if (result.data.Status) {
+          navigate("/dashboard/employee");
+        } else {
+          alert(result.data.Error);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <div className="d-flex justify-content-center align-items-center mt-3">
       <div className="p-3 rounded w-50 border">
         <h3 className="text-center">Edit Employee</h3>
         <form className="row g-1" onSubmit={handleSubmit}>
           <div className="col-12">
-            <label for="inputName" className="form-label">
+            <label htmlFor="inputName" className="form-label">
               Name
             </label>
             <input
@@ -70,7 +86,7 @@ const EditEmployee = () => {
             />
           </div>
           <div className="col-12">
-            <label for="inputEmail4" className="form-label">
+            <label htmlFor="inputEmail4" className="form-label">
               Email
             </label>
             <input
@@ -85,8 +101,8 @@ const EditEmployee = () => {
               }
             />
           </div>
-          <div className='col-12'>
-            <label for="inputSalary" className="form-label">
+          <div className="col-12">
+            <label htmlFor="inputSalary" className="form-label">
               Salary
             </label>
             <input
@@ -102,7 +118,7 @@ const EditEmployee = () => {
             />
           </div>
           <div className="col-12">
-            <label for="inputAddress" className="form-label">
+            <label htmlFor="inputAddress" className="form-label">
               Address
             </label>
             <input
@@ -118,17 +134,28 @@ const EditEmployee = () => {
             />
           </div>
           <div className="col-12">
-            <label for="category" className="form-label">
-              Category
+            <label htmlFor="department" className="form-label">
+              Department
             </label>
-            <select name="category" id="category" className="form-select"
-                onChange={(e) => setEmployee({...employee, category_id: e.target.value})}>
-              {category.map((c) => {
-                return <option value={c.id}>{c.name}</option>;
-              })}
+            <select
+              name="department"
+              id="department"
+              className="form-select"
+              value={employee.department_id || ""}
+              onChange={(e) =>
+                setEmployee({ ...employee, department_id: e.target.value })
+              }
+            >
+              <option value="">Select Department</option>
+              {department.map((dept) => (
+                <option key={dept.ID} value={dept.ID}>
+                  {/* the column name in db is ID and Department_name */}
+                  {dept.Department_name}
+                </option>
+              ))}
             </select>
           </div>
-          
+
           <div className="col-12">
             <button type="submit" className="btn btn-primary w-100">
               Edit Employee
@@ -137,7 +164,7 @@ const EditEmployee = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default EditEmployee
+export default EditEmployee;
